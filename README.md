@@ -1,4 +1,6 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## RESTgithub
+
+This projects fetches information related to a keyword from github through its API. The keyword is entered by the user.
 
 ## Available Scripts
 
