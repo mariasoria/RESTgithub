@@ -1,13 +1,15 @@
 import React, {useState} from 'react';
 import './App.css';
+import ReactTable from 'react-table-6';
+import 'react-table-6/react-table.css';
 
 function App() {
-    // Definimos los estados iniciales y como se actualizarán
+    // Definition of the initial state and how they will be updated
     const [data, setData] = useState([]);
     const [keyword, setKeyword] = useState('');
 
     const fetchData = () => {
-        // Llamada a la REST API aquí
+        // REST API call
         const url = `https://api.github.com/search/repositories?q=${keyword}`;
         fetch(url)
         .then(response => response.json())
@@ -16,23 +18,39 @@ function App() {
         });
     }
 
-    // Definimos qué ocurrirá cuando se detecte un cambio en el input
+    // Definition of what will happen when a change in the input is detected
     const handleChange =(e) => {
         setKeyword(e.target.value);
     }
 
-    // Definimos la tabla que contendrá los datos recuperados a través de la API
-    const tableRows = data.map((item, index) => 
-        <tr key={index}>
-            <td> {item.full_name}</td>
-            <td> <a href={item.html_url}>{item.html_url}</a></td>
-        </tr>);
+    // when clicked the button, pops-up an alert with the value determined in the accessor of that column
+    const btnClick = (value) => {
+        alert (value)
+    }
+
+    const columns = [{
+        Header: 'Name', //Header of the column
+        accessor: 'full_name', // Value accessor (mandatory). It comes from the response from the API
+    }, {
+        Header: 'URL',
+        accessor: 'html_url',
+    }, {
+        Header: 'Owner', 
+        accessor: 'owner.login',
+    }, {
+        id: 'button',
+        sortable: false, 
+        filteable: false,
+        width: 100, 
+        accessor: 'full_name',
+        Cell: ({value}) => (<button onClick= {() => {btnClick(value)}}> Click me </button>)
+    }]
 
     return (
         <div className="App">
             <input type="text" onChange={handleChange}/>
             <button onClick={fetchData} value="keyword"> Fetch </button>
-            <table><tbody>{tableRows}</tbody></table>
+            <ReactTable data={data} columns={columns} filterable={true} defaultPageSize = {10}/>    
         </div>
     );
 }
